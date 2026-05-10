@@ -1,4 +1,4 @@
-import { StatLine as StatLineType, TeamColors } from '../types/highlight'
+import type { StatLine as StatLineType, TeamColors } from '../types/highlight'
 
 interface Props {
   stats: StatLineType

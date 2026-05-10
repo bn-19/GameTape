@@ -1,7 +1,8 @@
-import { HighlightResponse } from '../types/highlight'
+import type { HighlightResponse } from '../types/highlight'
 import GameSummary from './GameSummary'
 import KeyHighlights from './KeyHighlights'
 import StatLine from './StatLine'
+import GenericStatLine from './GenericStatLine'
 import ImpactAnalysis from './ImpactAnalysis'
 import HighlightGrade from './HighlightGrade'
 
@@ -30,7 +31,11 @@ export default function HighlightCard({ data }: Props) {
         team_abbrev={data.team_abbrev}
       />
       <KeyHighlights highlights={data.key_highlights} colors={colors} />
-      <StatLine stats={data.stat_line} colors={colors} />
+      {data.stat_items ? (
+        <GenericStatLine stats={data.stat_items} colors={colors} />
+      ) : (
+        <StatLine stats={data.stat_line} colors={colors} />
+      )}
       <ImpactAnalysis analysis={data.impact_analysis} colors={colors} />
       <HighlightGrade grade={data.highlight_grade} score={data.grade_score} colors={colors} />
     </div>

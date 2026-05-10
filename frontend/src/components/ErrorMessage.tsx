@@ -1,4 +1,4 @@
-import { ApiError } from '../types/highlight'
+import type { ApiError } from '../types/highlight'
 
 interface Props {
   error: ApiError

@@ -1,4 +1,4 @@
-import { TeamColors } from '../types/highlight'
+import type { TeamColors } from '../types/highlight'
 
 interface Props {
   highlights: string[]
