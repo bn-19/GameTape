@@ -32,10 +32,12 @@ export interface StatLine {
 }
 
 export interface HighlightResponse {
+  sport: 'nba' | 'nfl'
   result_type: 'player' | 'team'
   game_summary: GameSummary
   key_highlights: string[]
   stat_line: StatLine
+  stat_items?: { label: string; value: string }[]
   impact_analysis: string
   highlight_grade: string
   grade_score: number
@@ -48,4 +50,50 @@ export interface HighlightResponse {
 export interface ApiError {
   message: string
   suggestions?: string[]
+}
+
+export interface SearchSuggestion {
+  value: string
+  type: 'player' | 'team'
+  subtitle: string
+}
+
+export interface RecentGameTeam {
+  name: string
+  abbreviation: string
+  score: number
+  record: string
+  colors: TeamColors
+  seed?: number
+}
+
+export interface RecentGameLeader {
+  name: string
+  player_id: number
+  team_abbrev: string
+  points: number
+  rebounds: number
+  assists: number
+  headshot_url: string
+  category?: string
+  display_value?: string
+}
+
+export interface RecentGame {
+  game_id: string
+  game_date: string
+  status: string
+  label: string
+  series_text: string
+  matchup: string
+  home_team: RecentGameTeam
+  away_team: RecentGameTeam
+  leaders: RecentGameLeader[]
+  highlights: string[]
+  underdog_note?: string
+}
+
+export interface RecentGamesResponse {
+  as_of_date: string
+  games: RecentGame[]
 }

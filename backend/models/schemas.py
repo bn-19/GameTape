@@ -35,11 +35,18 @@ class StatLine(BaseModel):
     plus_minus: int
 
 
+class LabeledStat(BaseModel):
+    label: str
+    value: str
+
+
 class HighlightResponse(BaseModel):
+    sport: str = "nba"
     result_type: str  # "player" | "team"
     game_summary: GameSummary
     key_highlights: List[str]
     stat_line: StatLine
+    stat_items: Optional[List[LabeledStat]] = None
     impact_analysis: str
     highlight_grade: str
     grade_score: float
@@ -52,3 +59,53 @@ class HighlightResponse(BaseModel):
 class ErrorDetail(BaseModel):
     message: str
     suggestions: Optional[List[str]] = None
+
+
+class SearchSuggestion(BaseModel):
+    value: str
+    type: str
+    subtitle: str
+
+
+class SuggestionResponse(BaseModel):
+    suggestions: List[SearchSuggestion]
+
+
+class RecentGameTeam(BaseModel):
+    name: str
+    abbreviation: str
+    score: int
+    record: str
+    colors: TeamColors
+    seed: Optional[int] = None
+
+
+class RecentGameLeader(BaseModel):
+    name: str
+    player_id: int
+    team_abbrev: str
+    points: int
+    rebounds: int
+    assists: int
+    headshot_url: str
+    category: Optional[str] = None
+    display_value: Optional[str] = None
+
+
+class RecentGame(BaseModel):
+    game_id: str
+    game_date: str
+    status: str
+    label: str
+    series_text: str
+    matchup: str
+    home_team: RecentGameTeam
+    away_team: RecentGameTeam
+    leaders: List[RecentGameLeader]
+    highlights: List[str]
+    underdog_note: Optional[str] = None
+
+
+class RecentGamesResponse(BaseModel):
+    as_of_date: str
+    games: List[RecentGame]

@@ -6,25 +6,109 @@
   background: #000;
   color: #e8e8e8;
   min-height: 100vh;
+  color-scheme: dark;
 }
 
-body { background: #000; }
+html { scroll-behavior: smooth; }
+body { background: #000; min-height: 100vh; }
 
 /* ─── App shell ─────────────────────────────────────────────────────── */
 .app {
+  position: relative;
   min-height: 100vh;
   background: #000;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
+}
+
+.app::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 0%, #ff6b3514, transparent 42%),
+    linear-gradient(#000000a8, #000000e6);
+}
+
+.app-nfl::after {
+  background:
+    radial-gradient(circle at 50% 0%, #63a9ff1f, transparent 42%),
+    linear-gradient(#000000a8, #000000e6);
+}
+
+.logo-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(56px, 1fr));
+  gap: 26px;
+  padding: 28px;
+  opacity: 0.3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.logo-backdrop img {
+  width: 100%;
+  max-width: 92px;
+  aspect-ratio: 1;
+  object-fit: contain;
+  filter: grayscale(1) brightness(0.28) contrast(1.6);
+  mix-blend-mode: screen;
 }
 
 /* ─── Header ────────────────────────────────────────────────────────── */
 .app-header {
+  position: relative;
+  z-index: 5;
   width: 100%;
   max-width: 860px;
-  padding: 40px 20px 24px;
+  padding: max(24px, env(safe-area-inset-top)) 20px 24px;
   text-align: center;
+}
+
+.sport-tabs {
+  display: inline-flex;
+  background: #0d0d0d;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 24px;
+  gap: 4px;
+}
+
+.sport-tab {
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #888;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  padding: 9px 13px;
+  text-transform: uppercase;
+}
+
+.sport-tab:hover,
+.sport-tab:focus-visible {
+  color: #fff;
+  outline: 1px solid #555;
+}
+
+.sport-tab.active {
+  background: #ff6b35;
+  color: #000;
+}
+
+.app-nfl .sport-tab.active {
+  background: #63a9ff;
 }
 
 .app-title {
@@ -50,6 +134,11 @@ body { background: #000; }
 /* ─── Search bar ────────────────────────────────────────────────────── */
 .search-form { width: 100%; }
 
+.search-shell {
+  position: relative;
+  width: 100%;
+}
+
 .search-wrapper {
   display: flex;
   align-items: center;
@@ -61,6 +150,7 @@ body { background: #000; }
   gap: 8px;
 }
 .search-wrapper:focus-within { border-color: #ff6b35; box-shadow: 0 0 20px #ff6b3544; }
+.app-nfl .search-wrapper:focus-within { border-color: #63a9ff; box-shadow: 0 0 20px #63a9ff44; }
 
 .search-icon { font-size: 1.3rem; flex-shrink: 0; }
 
@@ -90,6 +180,61 @@ body { background: #000; }
 }
 .search-btn:hover:not(:disabled) { background: #ff8c5a; transform: scale(1.04); }
 .search-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.app-nfl .search-btn { background: #63a9ff; }
+.app-nfl .search-btn:hover:not(:disabled) { background: #9bc9ff; }
+
+.search-suggestions {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 22px;
+  right: 22px;
+  z-index: 50;
+  background: #101010;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 18px 45px #000;
+}
+
+.suggestion-kicker {
+  font-family: Arial, sans-serif;
+  color: #777;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 8px 8px;
+  text-align: left;
+}
+
+.search-suggestion {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  text-align: left;
+}
+
+.search-suggestion:hover,
+.search-suggestion:focus-visible {
+  background: #1f1f1f;
+  outline: 1px solid #ff6b35;
+}
+
+.app-nfl .search-suggestion:hover,
+.app-nfl .search-suggestion:focus-visible {
+  outline-color: #63a9ff;
+}
+
+.search-suggestion span { font-weight: 800; }
+.search-suggestion small { color: #888; white-space: nowrap; }
 
 /* ─── Spinner ───────────────────────────────────────────────────────── */
 .spinner {
@@ -104,6 +249,8 @@ body { background: #000; }
 
 /* ─── Main ──────────────────────────────────────────────────────────── */
 .app-main {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 860px;
   padding: 0 20px 60px;
@@ -146,6 +293,375 @@ body { background: #000; }
   transition: border-color 0.2s, color 0.2s;
 }
 .example-chip:hover { border-color: #ff6b35; color: #ff6b35; }
+.app-nfl .example-chip:hover { border-color: #63a9ff; color: #63a9ff; }
+
+.app-feature-strip {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 22px auto 0;
+}
+
+.app-feature-strip span {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  color: #aaa;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  padding: 7px 10px;
+  text-transform: uppercase;
+}
+
+/* ─── Recent games ──────────────────────────────────────────────────── */
+.recent-games-section {
+  width: 100%;
+  margin: 42px auto 0;
+  text-align: left;
+}
+
+.recent-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.recent-header h2 {
+  color: #fff;
+  font-size: 1.25rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.recent-header p {
+  color: #777;
+  font-size: 0.78rem;
+  margin: 5px 0 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.underdog-watch {
+  display: grid;
+  grid-template-columns: minmax(140px, 0.8fr) 1.5fr;
+  gap: 14px;
+  align-items: stretch;
+  background: #0d0d0d;
+  border: 1px solid #2c2c2c;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+.underdog-watch span {
+  display: block;
+  color: #ff6b35;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.app-nfl .underdog-watch span { color: #63a9ff; }
+
+.underdog-watch h3 {
+  color: #eee;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  margin-top: 5px;
+  text-transform: uppercase;
+}
+
+.underdog-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.underdog-list button {
+  background: #070707;
+  border: 1px solid #2b2b2b;
+  border-radius: 6px;
+  color: #ddd;
+  cursor: pointer;
+  padding: 10px;
+  text-align: left;
+}
+
+.underdog-list button:hover,
+.underdog-list button:focus-visible {
+  border-color: #ff6b35;
+  outline: none;
+}
+
+.app-nfl .underdog-list button:hover,
+.app-nfl .underdog-list button:focus-visible {
+  border-color: #63a9ff;
+}
+
+.underdog-list strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.underdog-list small {
+  display: block;
+  color: #8e8e8e;
+  font-family: Arial, sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+.recent-games-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.recent-game-card {
+  position: relative;
+  min-height: 250px;
+  background: #0b0b0b;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 16px;
+  overflow: visible;
+}
+
+.recent-game-card:hover {
+  box-shadow: 0 0 35px #ff6b3522;
+}
+.app-nfl .recent-game-card:hover { box-shadow: 0 0 35px #63a9ff22; }
+
+.recent-game-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #888;
+  font-family: Arial, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.recent-scoreline {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.recent-scoreline > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.recent-team {
+  font-size: 1.65rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.recent-scoreline strong {
+  color: #fff;
+  font-size: 2rem;
+}
+
+.recent-series {
+  color: #777;
+  font-family: Arial, sans-serif;
+  font-size: 0.8rem;
+  margin: 10px 0 14px;
+}
+
+.underdog-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #231003;
+  border: 1px solid #ff6b35;
+  border-radius: 4px;
+  color: #ff9a6b;
+  font-family: Arial, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  padding: 4px 7px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.app-nfl .underdog-badge {
+  background: #061223;
+  border-color: #63a9ff;
+  color: #9bc9ff;
+}
+
+.recent-leader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+}
+
+.recent-leader-img {
+  width: 58px;
+  height: 44px;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 6px;
+  background: #111;
+  border: 1px solid #222;
+}
+
+.recent-leader span {
+  display: block;
+  color: #eee;
+  font-family: Arial, sans-serif;
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+
+.recent-leader small {
+  display: block;
+  color: #777;
+  font-family: Arial, sans-serif;
+  font-size: 0.72rem;
+  margin-top: 2px;
+}
+
+.recent-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.recent-inspect-btn,
+.recent-load-btn {
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #ddd;
+  background: #151515;
+  font-family: Arial, sans-serif;
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  padding: 8px 10px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.recent-inspect-btn:hover,
+.recent-inspect-btn:focus-visible,
+.recent-load-btn:hover,
+.recent-load-btn:focus-visible {
+  border-color: #ff6b35;
+  color: #ff6b35;
+  outline: none;
+}
+
+.app-nfl .recent-inspect-btn:hover,
+.app-nfl .recent-inspect-btn:focus-visible,
+.app-nfl .recent-load-btn:hover,
+.app-nfl .recent-load-btn:focus-visible {
+  border-color: #63a9ff;
+  color: #63a9ff;
+}
+
+.recent-popover {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: calc(100% - 18px);
+  z-index: 5;
+  background: #111;
+  border: 1px solid #ff6b35;
+  border-radius: 8px;
+  padding: 14px;
+  box-shadow: 0 18px 60px #000;
+}
+.app-nfl .recent-popover { border-color: #63a9ff; }
+
+.recent-popover-title {
+  color: #ff6b35;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.app-nfl .recent-popover-title { color: #63a9ff; }
+
+.recent-popover ul {
+  display: grid;
+  gap: 7px;
+  list-style: none;
+}
+
+.recent-popover li {
+  color: #ccc;
+  font-family: Arial, sans-serif;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.underdog-popover-note {
+  color: #ff9a6b;
+  font-family: Arial, sans-serif;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  margin-top: 10px;
+}
+
+.app-nfl .underdog-popover-note { color: #9bc9ff; }
+
+.recent-popover-leaders {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.recent-popover-leaders button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #080808;
+  border: 1px solid #2c2c2c;
+  border-radius: 6px;
+  color: #ddd;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.recent-popover-leaders button:hover { border-color: #ff6b35; }
+.app-nfl .recent-popover-leaders button:hover { border-color: #63a9ff; }
+
+.recent-popover-leaders .recent-leader-img {
+  width: 42px;
+  height: 32px;
+}
+
+.recent-popover-leaders span {
+  font-family: Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-align: left;
+}
+
+.recent-skeleton {
+  min-height: 250px;
+  background: linear-gradient(90deg, #0b0b0b, #171717, #0b0b0b);
+  animation: skeleton-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
 
 /* ─── Error card ────────────────────────────────────────────────────── */
 .error-card {
@@ -363,10 +879,21 @@ body { background: #000; }
 
 /* ─── Responsive ────────────────────────────────────────────────────── */
 @media (max-width: 560px) {
+  .logo-backdrop { grid-template-columns: repeat(4, 1fr); gap: 18px; padding: 18px; }
+  .sport-tabs { width: 100%; }
+  .sport-tab { flex: 1; font-size: 0.68rem; padding: 9px 6px; }
   .card-section { padding: 18px 16px; }
   .game-summary-body { flex-direction: column; align-items: center; text-align: center; }
   .player-headshot { width: 130px; height: 95px; }
   .game-meta { justify-content: center; }
   .stat-grid { grid-template-columns: repeat(4, 1fr); }
   .grade-letter { font-size: 3.5rem; }
+  .search-wrapper { border-radius: 24px; padding-left: 14px; }
+  .search-btn { padding: 10px 16px; }
+  .search-suggestions { left: 0; right: 0; }
+  .recent-games-grid { grid-template-columns: 1fr; }
+  .underdog-watch { grid-template-columns: 1fr; }
+  .underdog-list { grid-template-columns: 1fr; }
+  .recent-popover { position: static; margin-top: 12px; }
+  .recent-popover-leaders { flex-direction: column; }
 }

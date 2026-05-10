@@ -1,4 +1,4 @@
-import { GameSummary as GameSummaryType, TeamColors } from '../types/highlight'
+import type { GameSummary as GameSummaryType, TeamColors } from '../types/highlight'
 
 interface Props {
   summary: GameSummaryType
